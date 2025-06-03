@@ -1,6 +1,6 @@
 - Feature Name: otel_support
 - Start Date: 2025-06-02
-- RFC PR: [seismometer/rfcs#0000](https://github.com/epic-open-source/seismometer-rfcs/pull/0000)
+- RFC PR: [seismometer/rfcs#0004](https://github.com/epic-open-source/seismometer-rfcs/pull/4)
 - Seismometer Issue: [seismometer/#0000](https://github.com/epic-open-source/seismometer/issues/0000)
 
 # Summary
