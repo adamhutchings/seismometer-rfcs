@@ -37,10 +37,16 @@ OpenTelemetry SDK to emit standardized metrics.
 More elaborately, `OpenTelemetryRecorder` would possess the following fields and methods:
 - `instruments: dict[str, Gauge]`, where `Gauge` is an OpenTelemetry class for recording metrics. The dictionary would be accessed by name,
 so for instance `self.instruments["PPV"]` would be the instrument recording all PPV-related metrics.
-- `populate_metrics(self, attributes: dict[str, Any], metrics: dict[str, float])`, which uses `self.instruments` to record the metrics
-stored in metrics, with `attributes` storing the parameters of the call. For example, if a score threshold of 0.2 resulted in an accuracy
-of 0.25 on 70+ patients, we might call `populate_metrics({"score_threshold":0.2, "Age":"70+"}, {"accuracy":0.25})`, which would then
-use `self.instruments["accuracy"]` to record the received data.
+- `__init__(self, metric_names, name)`, which would initialize `self.instruments` to have Gauges for every `metric_name`, and also set the
+name of the recorder to be `name`. (This `name` would then show up in OpenTelemetry output.)
+- `populate_metrics(self, attributes: dict[str, Any], metrics: dict[str, Any])`, which uses `self.instruments` to record the metrics
+stored in metrics, with `attributes` storing the parameters of the call, along with other metadata we want to store like the timestamp.
+For example, if a score threshold of 0.2 resulted in an accuracy of 0.25 on 70+ patients, we might call
+`populate_metrics({"score_threshold":0.2, "Age":"70+"}, {"accuracy":0.25})`, which would then use `self.instruments["accuracy"]` to record
+the received data. The values in the `metrics` dictionary must be strings, numerics, lists, or dictionaries.
+
+The aim here would be to have each `instrument` recording a particular type of value, so for example all measurements of `accuracy` would
+be grouped together as opposed to all sorts of measurements on patients in the age range `[10, 20)`.
 
 ## The Output System
 While it may be expedient to simply write metrics into files or even to the console, because the entire point of OpenTelemetry support is
@@ -77,6 +83,10 @@ export metrics. However, as I will detail some more below in the unresolved ques
 towards a state where visualization and metric exporting are separated, and accessing the metric-emitting functionality where we define
 plotting functions would serve only to entangle these functions more.
 
+As for why metrics are grouped by type of measurement instead of by cohort, I believe this fits better with the metaphor of an
+instrument, in terms of a physical device whose job it is to measure one sort of thing. However, because individual measurements have
+many defining attributes, in principle a user could group them by any one.
+
 # Unresolved questions
 [unresolved-questions]: #unresolved-questions
 
@@ -90,3 +100,11 @@ One thing we should consider in the future is how separate we want the visualiza
 add metric-emitting functionality into the code while keeping current plotting capabilities intact, but it would probably be more elegant
 to separate seismometer into two steps: an OpenTelemetry-emitting stage which calculates the metrics, and then an OpenTelemetry-accepting
 stage which can create plots or interactive widgets in which to explore the resulting data.
+
+Another question to consider is how to denote what types of metrics are to be emitted from a give notebook or set of runs, in terms of what
+their data represents or how we might aggregate the individual measurements. OpenTelemetry does have mechanisms by which this might happen
+(instruments of type `UpDownCounter` instead of `Gauge` for example), so we may need to consider ways by which to pass this information to
+`__init__`.
+
+Finally, we should consider design to direct which metrics are emitted from a given run. For example, maybe we would want something in
+`config.yml` which seismometer would then read upon startup and/or logging.
