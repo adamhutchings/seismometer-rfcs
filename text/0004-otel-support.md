@@ -43,7 +43,8 @@ name of the recorder to be `name`. (This `name` would then show up in OpenTeleme
 stored in metrics, with `attributes` storing the parameters of the call, along with other metadata we want to store like the timestamp.
 For example, if a score threshold of 0.2 resulted in an accuracy of 0.25 on 70+ patients, we might call
 `populate_metrics({"score_threshold":0.2, "Age":"70+"}, {"accuracy":0.25})`, which would then use `self.instruments["accuracy"]` to record
-the received data. The values in the `metrics` dictionary must be strings, numerics, lists, or dictionaries.
+the received data. The values in the `metrics` dictionary must be numerics, lists, or dictionaries. (If string data is desired, a more
+appropriate place to put it might be in the attributes section.)
 
 The aim here would be to have each `instrument` recording a particular type of value, so for example all measurements of `accuracy` would
 be grouped together as opposed to all sorts of measurements on patients in the age range `[10, 20)`.
@@ -54,9 +55,12 @@ to allow integrated use of seismometer with other applications we would have mor
 
 Luckily, OpenTelemetry provides such capabilities, by means of "exporters" (which emit telemetry) and "collectors" (which accept it for
 later use), which can run over web protocols like HTTP/protobuf. As such, each `MetricGenerator` instance will contain a field of type
-`MetricExporter` (which includes basic functionality like the subclass of type `ConsoleMetricExporter` as well as the more extensible
-`OTLPMetricExporter`) which will determine where OTLP metrics go -- to a file or console for simple use, or to a collector for more
-integrated use.
+`OpenTelemetryRecorder` which will abstract away the necessary OpenTelemetry interfacing. For some of the widgets which do not have state
+in their plotting functionality, metrics will be exhausted during the plotting function -- otherwise, when possible, metrics will be
+exhausted when calculated.
+
+In order to more cleanly separate logging and plotting, metrics will be exhausted when they are in a ready form to be plotted, as opposed
+to immediately when they are generated or when 
 
 ## Brief Example
 For instance, to log metrics to standard out (as an initial/debug step), the necessary code might look something like this:
@@ -105,10 +109,11 @@ The defaults for each will be: `output_metrics: true, log_all: false`, `granular
 - What is the impact of not doing this?
 -->
 
-One alternative is to instead access the metric-exporting functionality by means of having decorators on each widget which is meant to
-export metrics. However, as I will detail some more below in the unresolved questions, it is worthwhile to consider building seismometer
-towards a state where visualization and metric exporting are separated, and accessing the metric-emitting functionality where we define
-plotting functions would serve only to entangle these functions more.
+While it is attractive to do something such as placing decorators on each widget meant to export metrics, in practice the metric
+exporting is different enough each time to make this difficult. Further, in order to disentangle the metric exhaustion from the
+metrics being plotted, it makes sense to organize it as described above. In any case, every call which renders a plot should
+output metrics exactly once (or never if the corresponding `output_metrics` field is set to false), which is the only
+consistency that should matter for an end user. The other organization is largely for the developers of seismometer.
 
 As for why metrics are grouped by type of measurement instead of by cohort, I believe this fits better with the metaphor of an
 instrument, in terms of a physical device whose job it is to measure one sort of thing. However, because individual measurements have
