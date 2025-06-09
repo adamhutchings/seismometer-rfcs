@@ -69,6 +69,33 @@ For instance, to log metrics to standard out (as an initial/debug step), the nec
     self.recorder.exhaust_metrics(attributes=parameters, metrics=plot_data)
 ```
 
+## Output configuration
+To configure which metrics are emitted and how, extra data will be added to each seismograph's `usage_config.yml` file.
+There will be a section titled `otel_info`, configured as follows:
+```yaml
+otel_info:
+  WidgetName:
+    output_metrics: true
+    log_all: true
+    granularity: 4
+    measurement_type: Gauge
+  OtherWidgetName:
+    ...
+```
+For each widget:
+- `output_metrics` will decide whether metrics are output from this widget.
+- `log_all` will indicate whether all information needed to reconstruct the entire graphic or
+plot is dumped. For example, in emitting metrics from a widget with an ROC curve, `log_all: true` will emit every datapoint
+in the entire plot, while `log_all: false` will only emit the points on the data curve specified by the thresholds inherent
+in the widget.
+- for plots displaying quantile data, `granularity` specifies how many quantiles for each to output.
+- `measurement_type` dictates how individual metric outputs relate to one another. There will be at least three types supported
+here: `Gauge` for points of data which have no relation to one another (like for a fairness audit, where it would make no sense
+to add together two fairness scores), `Counter` for points of data which are meant to be summed up, and `Histogram` for data
+which is meant to be displayed in a histogram format, such as in several of the widgets.
+
+The defaults for each will be: `output_metrics: true, log_all: false`, `granularity: 4`, `measurement_type: Gauge`.
+
 # Rationale and alternatives
 [rationale-and-alternatives]: #rationale-and-alternatives
 
@@ -105,6 +132,3 @@ Another question to consider is how to denote what types of metrics are to be em
 their data represents or how we might aggregate the individual measurements. OpenTelemetry does have mechanisms by which this might happen
 (instruments of type `UpDownCounter` instead of `Gauge` for example), so we may need to consider ways by which to pass this information to
 `__init__`.
-
-Finally, we should consider design to direct which metrics are emitted from a given run. For example, maybe we would want something in
-`config.yml` which seismometer would then read upon startup and/or logging.
