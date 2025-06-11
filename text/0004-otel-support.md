@@ -78,24 +78,24 @@ To configure which metrics are emitted and how, extra data will be added to each
 There will be a section titled `otel_info`, configured as follows:
 ```yaml
 otel_info:
-  plot_function:
+  metric_type:
     output_metrics: true
     log_all: true
     granularity: 4
     measurement_type: Gauge
-  other_plot_function:
+  othe_metric_type:
     ...
 ```
-For each plot function:
-- `output_metrics` will decide whether metrics are output from this plot function.
+For each type of metric (sensitivity, specificity, etc.):
+- `output_metrics` will decide whether this metric is dumped.
 - `log_all` will indicate whether all information needed to reconstruct the entire graphic or
 plot is dumped. For example, in emitting metrics from a widget with an ROC curve, `log_all: true` will emit every datapoint
-in the entire plot, while `log_all: false` will only emit the points on the data curve specified by the thresholds inherent
+in the entire ROC curve, while `log_all: false` will only emit the points on the data curve specified by the thresholds inherent
 in the widget.
-- for plots displaying quantile data, `granularity` specifies how many quantiles for each to output.
+- For metrics representing quantile data, `granularity` specifies how many quantiles for each to output.
 - `measurement_type` dictates how individual metric outputs relate to one another. There will be at least three types supported
 here: `Gauge` for points of data which have no relation to one another (like for a fairness audit, where it would make no sense
-to add together two fairness scores), `Counter` for points of data which are meant to be summed up, and `Histogram` for data
+to add together two accuracy scores), `Counter` for points of data which are meant to be summed up, and `Histogram` for data
 which is meant to be displayed in a histogram format, such as in several of the widgets.
 
 The defaults for each will be: `output_metrics: true, log_all: false`, `granularity: 4`, `measurement_type: Gauge`.
