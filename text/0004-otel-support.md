@@ -109,10 +109,9 @@ The defaults for each will be: `output_metrics: true, log_all: false`, `granular
 - What is the impact of not doing this?
 -->
 
-While it is attractive to do something such as placing decorators on each widget meant to export metrics, in practice the metric
-exporting is different enough each time to make this difficult. Further, in order to disentangle the metric exhaustion from the
+In order to disentangle the metric exhaustion from the
 metrics being plotted, it makes sense to organize it as described above. In any case, every call which renders a plot should
-output metrics exactly once (or never if the corresponding `output_metrics` field is set to false), which is the only
+output metrics exactly once (or never if the corresponding `output_metrics` fields are set to false), which is the only
 consistency that should matter for an end user. The other organization is largely for the developers of seismometer.
 
 As for why metrics are grouped by type of measurement instead of by cohort, I believe this fits better with the metaphor of an
