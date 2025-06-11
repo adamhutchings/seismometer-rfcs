@@ -31,8 +31,8 @@ If this is content to support a new type of evaluation, describe what dataset yo
 ## The Core
 At its core, the new proposed telemetry emission would lie in a new `OpenTelemetryRecorder` class, which would provide methods to record
 data in the form of OpenTelemetry metrics. In the methods which currently run when new metrics are requested (such as
-`BinaryClassifierMetricGenerator.calculate_binary_stats`), calls to the new code would be added, which would then invoke methods from the
-OpenTelemetry SDK to emit standardized metrics.
+`BinaryClassifierMetricGenerator.calculate_binary_stats` and many of the plot functions in `api/plots.py`), calls to `OpenTelemetryRecorder`
+instances would be added.
 
 More elaborately, `OpenTelemetryRecorder` would possess the following fields and methods:
 - `instruments: dict[str, Gauge]`, where `Gauge` is an OpenTelemetry class for recording metrics. The dictionary would be accessed by name,
@@ -59,8 +59,9 @@ later use), which can run over web protocols like HTTP/protobuf. As such, each `
 in their plotting functionality, metrics will be exhausted during the plotting function -- otherwise, when possible, metrics will be
 exhausted when calculated.
 
-In order to more cleanly separate logging and plotting, metrics will be exhausted when they are in a ready form to be plotted, as opposed
-to immediately when they are generated or when 
+In order to more cleanly separate logging and plotting, metrics will be exhausted when they are in form ready to be plotted, instead of
+immediately when they are generated. Given the structure of the code, this may not be possible to do in a perfectly consistent manner,
+but we would aim to exhaust metrics approximately in places corersponding to the `plot_` functions in `api/plots.py`.
 
 ## Brief Example
 For instance, to log metrics to standard out (as an initial/debug step), the necessary code might look something like this:
@@ -133,7 +134,3 @@ add metric-emitting functionality into the code while keeping current plotting c
 to separate seismometer into two steps: an OpenTelemetry-emitting stage which calculates the metrics, and then an OpenTelemetry-accepting
 stage which can create plots or interactive widgets in which to explore the resulting data.
 
-Another question to consider is how to denote what types of metrics are to be emitted from a give notebook or set of runs, in terms of what
-their data represents or how we might aggregate the individual measurements. OpenTelemetry does have mechanisms by which this might happen
-(instruments of type `UpDownCounter` instead of `Gauge` for example), so we may need to consider ways by which to pass this information to
-`__init__`.
