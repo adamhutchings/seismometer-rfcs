@@ -30,9 +30,8 @@ If this is content to support a new type of evaluation, describe what dataset yo
 
 ## The Core
 At its core, the new proposed telemetry emission would lie in a new `OpenTelemetryRecorder` class, which would provide methods to record
-data in the form of OpenTelemetry metrics. In the methods which currently run when new metrics are requested (such as
-`BinaryClassifierMetricGenerator.calculate_binary_stats` and many of the plot functions in `api/plots.py`), calls to `OpenTelemetryRecorder`
-instances would be added.
+data in the form of OpenTelemetry metrics. In the methods which currently run when new metrics are requested (such as many of the plot
+functions in `api/plots.py`), calls to `OpenTelemetryRecorder` instances would be added.
 
 More elaborately, `OpenTelemetryRecorder` would possess the following fields and methods:
 - `instruments: dict[str, Gauge]`, where `Gauge` is an OpenTelemetry class for recording metrics. The dictionary would be accessed by name,
