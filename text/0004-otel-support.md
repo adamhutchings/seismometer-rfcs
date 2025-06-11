@@ -78,16 +78,16 @@ To configure which metrics are emitted and how, extra data will be added to each
 There will be a section titled `otel_info`, configured as follows:
 ```yaml
 otel_info:
-  WidgetName:
+  plot_function:
     output_metrics: true
     log_all: true
     granularity: 4
     measurement_type: Gauge
-  OtherWidgetName:
+  other_plot_function:
     ...
 ```
-For each widget:
-- `output_metrics` will decide whether metrics are output from this widget.
+For each plot function:
+- `output_metrics` will decide whether metrics are output from this plot function.
 - `log_all` will indicate whether all information needed to reconstruct the entire graphic or
 plot is dumped. For example, in emitting metrics from a widget with an ROC curve, `log_all: true` will emit every datapoint
 in the entire plot, while `log_all: false` will only emit the points on the data curve specified by the thresholds inherent
