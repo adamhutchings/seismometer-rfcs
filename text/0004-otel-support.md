@@ -83,7 +83,7 @@ otel_info:
     log_all: true
     granularity: 4
     measurement_type: Gauge
-  othe_metric_type:
+  other_metric_type:
     ...
 ```
 For each type of metric (sensitivity, specificity, etc.):
