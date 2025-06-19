@@ -100,6 +100,27 @@ which is meant to be displayed in a histogram format, such as in several of the 
 
 The defaults for each will be: `output_metrics: true, log_all: false`, `granularity: 4`, `measurement_type: Gauge`.
 
+## Automatic metric exporting
+
+Additionally, for the plotting widgets which select by cohort, the default OpenTelemetry behavior will be to export metrics
+as they appear on the plot -- that is, the user will select cohort information and this information will be plotted and exported.
+However, the following section might appear under `otel_info`:
+```yml
+  WidgetName:
+    cohorts:
+      Age:
+        ["[10, 20)", "70+"]
+      Race:
+        ["AfricanAmerican", "Hispanic"]
+    intersecting: false
+```
+This would indicate that this plot should *automatically* export metrics from each of the selected cohorts. The `intersecting`
+flag would signal whether to look at combinations of cohorts: in this case the widget would log metrics corresponding to four
+groups (both age categories and both race categories), while with `intersecting: true` the widget would log metrics corresponding
+to all four possible combinations of age and race from those provided. (Default behavior is that `intersecting` is `false`.)
+
+Without this section, no automatic exporting will occur.
+
 # Rationale and alternatives
 [rationale-and-alternatives]: #rationale-and-alternatives
 
