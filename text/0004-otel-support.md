@@ -108,10 +108,11 @@ However, the following section might appear under `otel_info`:
 ```yml
   WidgetName:
     cohorts:
-      Age:
-        ["[10, 20)", "70+"]
-      Race:
-        ["AfricanAmerican", "Hispanic"]
+      Age: ["[10, 20)", "70+"]
+      Race: ["AfricanAmerican", "Hispanic"]
+    options:
+      Targets: ["Readmitted within 30 Days"]
+      Scores: ["Risk30DayReadmissionPercentile", "RiskLongStay"]
     intersecting: false
 ```
 This would indicate that this plot should *automatically* export metrics from each of the selected cohorts. The `intersecting`
@@ -119,7 +120,11 @@ flag would signal whether to look at combinations of cohorts: in this case the w
 groups (both age categories and both race categories), while with `intersecting: true` the widget would log metrics corresponding
 to all four possible combinations of age and race from those provided. (Default behavior is that `intersecting` is `false`.)
 
-Without this section, no automatic exporting will occur.
+The `options` section provides information on what other parameters to log on, as applicable by plot. For omitted sections,
+the default will be to log with whatever the plot function is called with.
+
+Without this section, no automatic exporting will occur. With it, a full export will be called every time the corresponding plot
+function is called.
 
 # Rationale and alternatives
 [rationale-and-alternatives]: #rationale-and-alternatives
