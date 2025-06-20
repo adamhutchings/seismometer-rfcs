@@ -123,8 +123,7 @@ to all four possible combinations of age and race from those provided. (Default 
 The `options` section provides information on what other parameters to log on, as applicable by plot. For omitted sections,
 the default will be to log with whatever the plot function is called with.
 
-Without this section, no automatic exporting will occur. With it, a full export will be called every time the corresponding plot
-function is called.
+Without this section, no automatic exporting will occur. With it, a full export will be called once per widget per program execution.
 
 # Rationale and alternatives
 [rationale-and-alternatives]: #rationale-and-alternatives
