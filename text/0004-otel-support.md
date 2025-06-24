@@ -106,7 +106,7 @@ Additionally, for the plotting widgets which select by cohort, the default OpenT
 as they appear on the plot -- that is, the user will select cohort information and this information will be plotted and exported.
 However, the following section might appear under `otel_info`:
 ```yml
-  WidgetName:
+  plot_function:
     cohorts:
       Age: ["[10, 20)", "70+"]
       Race: ["AfricanAmerican", "Hispanic"]
@@ -116,13 +116,13 @@ However, the following section might appear under `otel_info`:
     intersecting: false
 ```
 This would indicate that this plot should *automatically* export metrics from each of the selected cohorts. The `intersecting`
-flag would signal whether to look at combinations of cohorts: in this case the widget would log metrics corresponding to four
+flag would signal whether to look at combinations of cohorts: in this case the plot would log metrics corresponding to four
 groups (both age categories and both race categories), while with `intersecting: true` the widget would log metrics corresponding
 to all four possible combinations of age and race from those provided. (Default behavior is that `intersecting` is `false`.)
 
 The `options` section provides information on what other parameters to log on, as applicable by plot.
 
-Without this section, no automatic exporting will occur. With it, a full export will be called once per widget per program execution.
+Without this section, no automatic exporting will occur. With it, a full export will be called once per plot per program execution.
 
 # Rationale and alternatives
 [rationale-and-alternatives]: #rationale-and-alternatives
