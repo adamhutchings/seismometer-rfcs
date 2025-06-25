@@ -114,13 +114,28 @@ However, the following section might appear under `otel_info`:
       Targets: ["Readmitted within 30 Days"]
       Scores: ["Risk30DayReadmissionPercentile", "RiskLongStay"]
     intersecting: false
+  other_plot_function:
+    # ...
 ```
-This would indicate that this plot should *automatically* export metrics from each of the selected cohorts. The `intersecting`
+This would indicate that `plot_function` should *automatically* export metrics from each of the selected cohorts. The `intersecting`
 flag would signal whether to look at combinations of cohorts: in this case the plot would log metrics corresponding to four
 groups (both age categories and both race categories), while with `intersecting: true` the widget would log metrics corresponding
 to all four possible combinations of age and race from those provided. (Default behavior is that `intersecting` is `false`.)
 
 The `options` section provides information on what other parameters to log on, as applicable by plot.
+
+Underneath a section can be multiple specifications of which sets of metrics to export, if needed.
+```yml
+  plot_function:
+    - cohorts:
+        Age: ["[10, 20)"]
+      options:
+        # ...
+    - cohorts:
+        Age: ["70+"]
+      options:
+        # possibly something entirely different
+```
 
 Without this section, no automatic exporting will occur. With it, a full export will be called once per plot per program execution.
 
