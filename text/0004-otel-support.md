@@ -137,7 +137,8 @@ Underneath a section can be multiple specifications of which sets of metrics to 
         # possibly something entirely different
 ```
 
-Without this section, no automatic exporting will occur. With it, a full export will be called once per plot per program execution.
+Without this section, no automatic exporting will occur. With it, a full export of all selected metrics may be performed with
+a single core seismometer function call.
 
 # Rationale and alternatives
 [rationale-and-alternatives]: #rationale-and-alternatives
