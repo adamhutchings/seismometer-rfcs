@@ -104,18 +104,18 @@ The defaults for each will be: `output_metrics: true, log_all: false`, `granular
 
 Additionally, for the plotting widgets which select by cohort, the default OpenTelemetry behavior will be to export metrics
 as they appear on the plot -- that is, the user will select cohort information and this information will be plotted and exported.
-However, the following section might appear under `otel_info`:
+However, the following might appear in a `metric-automation.yml` file:
 ```yml
-  plot_function:
-    cohorts:
-      Age: ["[10, 20)", "70+"]
-      Race: ["AfricanAmerican", "Hispanic"]
-    options:
-      Targets: ["Readmitted within 30 Days"]
-      Scores: ["Risk30DayReadmissionPercentile", "RiskLongStay"]
-    intersecting: false
-  other_plot_function:
-    # ...
+plot_function:
+  cohorts:
+    Age: ["[10, 20)", "70+"]
+    Race: ["AfricanAmerican", "Hispanic"]
+  options:
+    Targets: ["Readmitted within 30 Days"]
+    Scores: ["Risk30DayReadmissionPercentile", "RiskLongStay"]
+  intersecting: false
+other_plot_function:
+  # ...
 ```
 This would indicate that `plot_function` should *automatically* export metrics from each of the selected cohorts. The `intersecting`
 flag would signal whether to look at combinations of cohorts: in this case the plot would log metrics corresponding to four
@@ -126,18 +126,18 @@ The `options` section provides information on what other parameters to log on, a
 
 Underneath a section can be multiple specifications of which sets of metrics to export, if needed.
 ```yml
-  plot_function:
-    - cohorts:
-        Age: ["[10, 20)"]
-      options:
-        # ...
-    - cohorts:
-        Age: ["70+"]
-      options:
-        # possibly something entirely different
+plot_function:
+  - cohorts:
+      Age: ["[10, 20)"]
+    options:
+      # ...
+  - cohorts:
+      Age: ["70+"]
+    options:
+      # possibly something entirely different
 ```
 
-Without this section, no automatic exporting will occur. With it, a full export of all selected metrics may be performed with
+Without this file, no automatic exporting will occur. With it, a full export of all selected metrics may be performed with
 a single core seismometer function call.
 
 # Rationale and alternatives
