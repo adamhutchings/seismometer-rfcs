@@ -75,6 +75,7 @@ For instance, to log metrics to standard out (as an initial/debug step), the nec
 
 ## Output configuration
 To configure which metrics are emitted and how, extra data will be added to each seismograph's `usage_config.yml` file.
+(It may also, as configured in `config.yml` under `other_info: export:`, be in any other YAML file.)
 There will be a section titled `otel_info`, configured as follows:
 ```yaml
 otel_info:
@@ -138,7 +139,8 @@ plot_function:
 ```
 
 Without this file, no automatic exporting will occur. With it, a full export of all selected metrics may be performed with
-a single core seismometer function call.
+a single core seismometer function call, after loading in the relevant automation file. A command-line interface will be
+available to perform a full export with an arbitrary seismogram.
 
 # Rationale and alternatives
 [rationale-and-alternatives]: #rationale-and-alternatives
